@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "SmartTicketingSystem-main"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "SmartTicketingSystem-main-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

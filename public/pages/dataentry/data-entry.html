@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../resources/ico/ico.png">
+    <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../resources/style/style.css">
+    <title>Smart Ticketing System</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <div class="position-sticky sticky-top h-100">
+            <div id="side-nav"></div>
+        </div>
+
+        <!-- Main -->
+        <div class="main container-fluid px-5 py-4">
+            <div class="row mb-3">
+                <div class="col">
+                    <h4 class="fw-bold">Registered Drivers</h4>
+                </div>
+                <div class="col text-end">
+                    <button type="button" class="btn btn-success" id="exportXLS">
+                        Export
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addDataModal">
+                        Add Data 
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="card">
+                    <div class="card-body">
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">License No.</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Sex</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataTableBody">
+                                <!-- Dynamic content will be injected here -->
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Data Modal -->
+    <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addDataModalLabel">Add New Driver</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addDataForm" class="needs-validation" novalidate>
+
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                            <div class="invalid-feedback">Please enter the first name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                            <div class="invalid-feedback">Please enter the last name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="licenseNumber" class="form-label">License Number</label>
+                            <input type="text" class="form-control" id="licenseNumber" required>
+                            <div class="invalid-feedback">Please enter license number.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="address" required>
+                            <div class="invalid-feedback">Please enter address.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="sex" class="form-label">Sex</label>
+                            <select class="form-select" id="sex" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a gender.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profilePicture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profilePicture" accept="image/*">
+                            <div class="invalid-feedback">Please upload a profile picture.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Add Driver</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Data Modal -->
+    <div class="modal fade" id="editDataModal" tabindex="-1" aria-labelledby="editDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDataModalLabel">Edit Driver</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDataForm" class="needs-validation" novalidate>
+
+                        <div class="mb-3">
+                            <label for="editFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="editFirstName" required>
+                            <div class="invalid-feedback">Please enter the first name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="editLastName" required>
+                            <div class="invalid-feedback">Please enter the last name.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editLicenseNumber" class="form-label">License Number</label>
+                            <input type="text" class="form-control" id="editLicenseNumber" required>
+                            <div class="invalid-feedback">Please enter license number.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editAddress" class="form-label">Address</label>
+                            <input type="text" class="form-control" id="editAddress" required>
+                            <div class="invalid-feedback">Please enter address.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editSex" class="form-label">Sex</label>
+                            <select class="form-select" id="editSex" required>
+                                <option value="" selected disabled>Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a gender.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editProfilePicture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="editProfilePicture" accept="image/*">
+                            <div class="invalid-feedback">Please upload a profile picture.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Driver</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../resources/script/config.js" type="module"></script>
+    <script src="../../resources/script/script.js" type="module"></script>
+    <script src="../dataentry/script/script.js" type="module"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
