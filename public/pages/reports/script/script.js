@@ -16,7 +16,7 @@ function formatAmount(amount) {
 async function fetchApprehensionsData() {
     const tableBody = document.getElementById('dataTableBody');
     tableBody.innerHTML = ''; // Clear the table
-    let unpaidPendingTotal = 0; // Ensure it's a number
+    let overdueUnpaidTotal = 0; // Ensure it's a number
     let paidTotal = 0; // Ensure it's a number
 
     try {
@@ -34,20 +34,26 @@ async function fetchApprehensionsData() {
                 ? data.selectedViolations.map(violation => violation.name).join(', ')
                 : 'N/A';
 
-            // Generate status badge based on status
+            // Default to 'overdue' if no status is available
+            const status = data.status || 'overdue'; // Ensure status is never undefined
             let statusBadge = '';
-            const status = data.status || 'pending'; // Default to 'pending' if no status
             const totalAmount = parseFloat(data.totalAmount) || 0; // Ensure it's a number
 
-            if (status === 'paid') {
-                statusBadge = `<span class="badge bg-success w-100 px-1">${status}</span>`;
-                paidTotal += totalAmount; // Add to paid total
-            } else if (status === 'unpaid') {
-                statusBadge = `<span class="badge bg-danger w-100 px-1">${status}</span>`;
-                unpaidPendingTotal += totalAmount; // Add to unpaid/pending total
-            } else if (status === 'pending') {
-                statusBadge = `<span class="badge bg-warning w-100 px-1">${status}</span>`;
-                unpaidPendingTotal += totalAmount; // Add to unpaid/pending total
+            // Generate status badge based on status
+            switch (status) {
+                case 'paid':
+                    statusBadge = `<span class="badge bg-success w-100 px-1">${status}</span>`;
+                    paidTotal += totalAmount; // Add to paid total
+                    break;
+                case 'unpaid':
+                    statusBadge = `<span class="badge bg-warning w-100 px-1">${status}</span>`;
+                    overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
+                    break;
+                case 'overdue':
+                default:
+                    statusBadge = `<span class="badge bg-danger w-100 px-1">${status}</span>`;
+                    overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
+                    break;
             }
 
             // Fill the table row with data
@@ -72,13 +78,14 @@ async function fetchApprehensionsData() {
         });
 
         // Update the total amounts
-        document.getElementById('totalUnpaidAmount').innerText = `Unpaid/Pending Total: ${formatAmount(unpaidPendingTotal.toFixed(2))}`;
+        document.getElementById('totalUnpaidAmount').innerText = `Overdue/Unpaid Total: ${formatAmount(overdueUnpaidTotal.toFixed(2))}`;
         document.getElementById('totalPaidAmount').innerText = `Total Paid Amount: ${formatAmount(paidTotal.toFixed(2))}`;
 
     } catch (error) {
         console.error("Error fetching apprehensions data:", error);
     }
 }
+
 
 // Export to Excel
 const exportXLS = async () => {
