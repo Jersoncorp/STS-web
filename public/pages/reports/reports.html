@@ -36,7 +36,7 @@
                             <option value="">Filter by Status</option>
                             <option value="paid">Paid</option>
                             <option value="unpaid">Unpaid</option>
-                            <option value="pending">Pending</option>
+                            <option value="overdue">Overdue</option> <!-- Changed from "Pending" to "Overdue" -->
                         </select>
                         <button type="button" class="btn btn-success" id="exportXLS">
                             Export
@@ -47,7 +47,7 @@
                 <!-- Total Amounts -->
                 <div class="row mb-3">
                     <div class="row mb-3">
-                        <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Pending Total: 0</h1>
+                        <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Overdue Total: 0</h1> <!-- Changed "Pending" to "Overdue" -->
                     </div>
                     <div class="row">
                         <h1 id="totalPaidAmount" class="text-success">Total Paid Amount: 0</h1>
@@ -98,7 +98,7 @@
                         <select id="statusSelect" class="form-select">
                             <option value="paid">Paid</option>
                             <option value="unpaid">Unpaid</option>
-                            <option value="pending">Pending</option>
+                            <option value="overdue">Overdue</option> <!-- Changed from "Pending" to "Overdue" -->
                         </select>
                     </div>
                     <div class="modal-footer">
