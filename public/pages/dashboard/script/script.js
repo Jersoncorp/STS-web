@@ -1,6 +1,6 @@
 // Import Firebase Firestore and storage references
 import { firestore } from '../../../resources/script/config.js';
-import { collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
 // Function to get and display the number of documents in a Firestore collection
 async function fetchCollectionCount(collectionName, elementId) {
@@ -17,9 +17,8 @@ async function fetchCollectionCount(collectionName, elementId) {
 fetchCollectionCount('apprehensions', 'apprehensionsCount');
 fetchCollectionCount('registered_drivers', 'driversCount');
 
-
 // Function to fetch monthly apprehension data
-async function fetchMonthlyData() {
+async function fetchMonthlyData(selectedMonth = "") {
     const monthlyData = {};
     const locationData = {};
 
@@ -34,17 +33,20 @@ async function fetchMonthlyData() {
             const date = new Date(timestamp * 1000);
             const month = date.toLocaleString('default', { month: 'long' }); // Get full month name
 
-            // Count apprehensions per month
-            if (!monthlyData[month]) {
-                monthlyData[month] = 0;
-            }
-            monthlyData[month]++;
+            // Only include data for the selected month
+            if (selectedMonth === "" || month === selectedMonth) {
+                // Count apprehensions per month
+                if (!monthlyData[month]) {
+                    monthlyData[month] = 0;
+                }
+                monthlyData[month]++;
 
-            // Count apprehensions per location
-            if (locationData[address]) {
-                locationData[address]++;
-            } else {
-                locationData[address] = 1;
+                // Count apprehensions per location
+                if (locationData[address]) {
+                    locationData[address]++;
+                } else {
+                    locationData[address] = 1;
+                }
             }
         });
     } catch (error) {
@@ -55,8 +57,8 @@ async function fetchMonthlyData() {
 }
 
 // Function to prepare and render charts
-async function renderCharts() {
-    const { monthlyData, locationData } = await fetchMonthlyData();
+async function renderCharts(selectedMonth = "") {
+    const { monthlyData, locationData } = await fetchMonthlyData(selectedMonth);
 
     // Prepare monthly data for the chart
     const monthlyLabels = Object.keys(monthlyData);
@@ -113,10 +115,21 @@ async function renderCharts() {
         }
     };
 
-    // Render Charts
-    new Chart(document.getElementById('monthlyChart'), configMonthly);
-    new Chart(document.getElementById('locationChart'), configLocation);
+    // If a chart already exists, destroy it to create a new one
+    if (window.myMonthlyChart) {
+        window.myMonthlyChart.destroy();
+    }
+
+    // Render the new charts
+    window.myMonthlyChart = new Chart(document.getElementById('monthlyChart'), configMonthly);
+    window.myLocationChart = new Chart(document.getElementById('locationChart'), configLocation);
 }
 
-// Call the renderCharts function to execute
-renderCharts();
+// Event listener for the month filter
+document.getElementById('monthFilter').addEventListener('change', (event) => {
+    const selectedMonth = event.target.value;
+    renderCharts(selectedMonth);  // Re-render the chart with the selected month
+});
+
+// Call the renderCharts function to execute on page load
+renderCharts();  // Initial render with no filter (all data)
