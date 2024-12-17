@@ -122,7 +122,7 @@ async function renderCharts(selectedMonth = "") {
 
     // Render the new charts
     window.myMonthlyChart = new Chart(document.getElementById('monthlyChart'), configMonthly);
-    window.myLocationChart = new Chart(document.getElementById('locationChart'), configLocation);
+    window.locationbar = new Chart(document.getElementById('locationChart'), configLocation);
 }
 
 // Event listener for the month filter
