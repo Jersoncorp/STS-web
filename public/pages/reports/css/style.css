@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.paid, .unpaid {
+    flex: 1 1 48%;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.row-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+}
+
+.table {
+    width: 100%;
+    min-width: 600px; /* Minimum width to prevent table from shrinking too much */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead {
+    background-color: #f8f9fa;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+h4 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+#totalPaidAmount, #totalUnpaidAmount {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .paid, .unpaid {
+        flex: 1 1 100%; /* Stack columns vertically on small screens */
+    }
+}
