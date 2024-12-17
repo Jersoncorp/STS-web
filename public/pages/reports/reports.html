@@ -9,14 +9,13 @@
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../resources/style/style.css">
+    <link rel="stylesheet" href="../reports/css/style.css">
     <title>Smart Ticketing System</title>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
 
     <div class="wrapper">
-
         <!-- Sidebar -->
         <div class="position-sticky sticky-top h-100">
             <div id="side-nav"></div>
@@ -24,67 +23,83 @@
 
         <!-- Main -->
         <div class="main container-fluid p-0">
-
             <div class="px-5 py-4">
                 <div class="row mb-3">
                     <div class="col">
                         <h4 class="fw-bold">List of Violators</h4>
                     </div>
                     <div class="col text-end">
-                        
                         <select id="statusFilter" class="form-select d-inline w-auto ms-3">
                             <option value="">Filter by Status</option>
                             <option value="paid">Paid</option>
                             <option value="unpaid">Unpaid</option>
-                            <option value="overdue">Overdue</option> <!-- Changed from "Pending" to "Overdue" -->
+                            <option value="overdue">Overdue</option>
                         </select>
-                        <button type="button" class="btn btn-success" id="exportXLS">
-                            Export
-                        </button>
+                        <button type="button" class="btn btn-success" id="exportXLS">Export</button>
                     </div>
                 </div>
 
                 <!-- Total Amounts -->
                 <div class="row mb-3">
                     <div class="row mb-3">
-                        <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Overdue Total: 0</h1> <!-- Changed "Pending" to "Overdue" -->
+                        <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Overdue Total: 0</h1>
                     </div>
                     <div class="row">
                         <h1 id="totalPaidAmount" class="text-success">Total Paid Amount: 0</h1>
                     </div>
                 </div>
 
-
-                <div class="row">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">OR Number</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Address</th>
-                                        <th scope="col">Plate No.</th>
-                                        <th scope="col">Vehicle Type</th>
-                                        <th scope="col">Violation</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Apprehending Officer</th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dataTableBody">
-                                    <!-- Dynamic content will be injected here -->
-                                </tbody>
-                            </table>
-
+                        <!-- Table Section -->
+                        <div class="row">
+                            <!-- Paid Data Table -->
+                            <div class="col-md-6">
+                                <h4>Paid Apprehensions</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Full Name</th>
+                                            <th>OR Number</th>
+                                            <th>Status</th>
+                                            <th>Address</th>
+                                            <th>Plate Number</th>
+                                            <th>Vehicle Type</th>
+                                            <th>Violations</th>
+                                            <th>Date</th>
+                                            <th>Officer</th>
+                                            <th>Total Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="paidDataTableBody"></tbody>
+                                </table>
+                                <div id="totalPaidAmount"></div>
+                            </div>
+                            <!-- Unpaid Data Table -->
+                            <div class="col-md-6">
+                                <h4>Unpaid Apprehensions</h4>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Full Name</th>
+                                            <th>OR Number</th>
+                                            <th>Status</th>
+                                            <th>Address</th>
+                                            <th>Plate Number</th>
+                                            <th>Vehicle Type</th>
+                                            <th>Violations</th>
+                                            <th>Date</th>
+                                            <th>Officer</th>
+                                            <th>Total Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="unpaidDataTableBody"></tbody>
+                                </table>
+                                <div id="totalUnpaidAmount"></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            </div>
+                        </div>
 
         <!-- First Modal for Status Change -->
         <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
@@ -98,7 +113,7 @@
                         <select id="statusSelect" class="form-select">
                             <option value="paid">Paid</option>
                             <option value="unpaid">Unpaid</option>
-                            <option value="overdue">Overdue</option> <!-- Changed from "Pending" to "Overdue" -->
+                            <option value="overdue">Overdue</option>
                         </select>
                     </div>
                     <div class="modal-footer">
@@ -107,7 +122,6 @@
                 </div>
             </div>
         </div>
-
 
         <!-- Payment Modal (Bootstrap Modal) -->
         <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
@@ -136,7 +150,6 @@
             </div>
         </div>
 
-
     </div>
 
     <!-- Scripts -->
@@ -145,7 +158,6 @@
     <script src="../reports/script/script.js" type="module"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

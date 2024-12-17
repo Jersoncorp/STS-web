@@ -14,16 +14,30 @@ function formatAmount(amount) {
 
 // Fetch data from Firestore and populate the table
 async function fetchApprehensionsData() {
-    const tableBody = document.getElementById('dataTableBody');
-    tableBody.innerHTML = ''; // Clear the table
+    const paidTableBody = document.getElementById('paidDataTableBody');
+    const unpaidTableBody = document.getElementById('unpaidDataTableBody');
+    paidTableBody.innerHTML = ''; // Clear the paid table
+    unpaidTableBody.innerHTML = ''; // Clear the unpaid table
     let overdueUnpaidTotal = 0; // Ensure it's a number
     let paidTotal = 0; // Ensure it's a number
 
     try {
         const querySnapshot = await getDocs(collection(firestore, 'apprehensions'));
-        querySnapshot.forEach((docSnapshot) => {
-            const data = docSnapshot.data();
+        const data = [];
 
+        querySnapshot.forEach((docSnapshot) => {
+            const docData = docSnapshot.data();
+            data.push({ id: docSnapshot.id, ...docData });
+        });
+
+        // Sort the data by timestamp (most recent first)
+        data.sort((a, b) => b.timestamp - a.timestamp);
+
+        // Separate data into paid and unpaid arrays
+        const paidData = [];
+        const unpaidData = [];
+
+        data.forEach((data) => {
             // Filter based on the selected status
             if (selectedStatusFilter && data.status !== selectedStatusFilter) {
                 return; // Skip this item if it doesn't match the selected filter
@@ -44,15 +58,18 @@ async function fetchApprehensionsData() {
                 case 'paid':
                     statusBadge = `<span class="badge bg-success w-100 px-1">${status}</span>`;
                     paidTotal += totalAmount; // Add to paid total
+                    paidData.push({ row, data }); // Add to paid data array
                     break;
                 case 'unpaid':
                     statusBadge = `<span class="badge bg-warning w-100 px-1">${status}</span>`;
                     overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
+                    unpaidData.push({ row, data }); // Add to unpaid data array
                     break;
                 case 'overdue':
                 default:
                     statusBadge = `<span class="badge bg-danger w-100 px-1">${status}</span>`;
                     overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
+                    unpaidData.push({ row, data }); // Add to unpaid data array
                     break;
             }
 
@@ -69,12 +86,18 @@ async function fetchApprehensionsData() {
                 <td>${data.officerApprehend || 'N/A'}</td>
                 <td>${formatAmount(totalAmount) || 'N/A'}</td> <!-- Format the amount -->
                 <td>
-                    <button class="btn btn-primary change-status" data-id="${docSnapshot.id}" data-status="${status}" data-total="${totalAmount}">
+                    <button class="btn btn-primary change-status" data-id="${data.id}" data-status="${status}" data-total="${totalAmount}">
                         Edit
                     </button>
                 </td>
             `;
-            tableBody.appendChild(row);
+
+            // Append rows to respective tables
+            if (status === 'paid') {
+                paidTableBody.appendChild(row);
+            } else {
+                unpaidTableBody.appendChild(row);
+            }
         });
 
         // Update the total amounts
@@ -85,7 +108,6 @@ async function fetchApprehensionsData() {
         console.error("Error fetching apprehensions data:", error);
     }
 }
-
 
 // Export to Excel
 const exportXLS = async () => {
@@ -186,40 +208,20 @@ document.addEventListener('click', (event) => {
 // Handle Payment Modal's Done button click
 document.getElementById('paymentDoneBtn').addEventListener('click', async () => {
     const orNumber = document.getElementById('orNumber').value;
-    const amount = parseFloat(document.getElementById('amount').value);
+    const amount = parseFloat(document.getElementById('amount').value) || 0;
 
-    if (orNumber && amount) {
-        if (amount === selectedTotalAmount) {
-            // If the amount matches the totalAmount, update status and payment details
-            try {
-                const docRef = doc(firestore, 'apprehensions', selectedDocId);
-                await updateDoc(docRef, {
-                    status: 'paid',
-                    orNumber: orNumber
-                });
-
-                console.log("Payment details and status updated successfully");
-                fetchApprehensionsData(); // Re-fetch and update the table
-
-                document.querySelector('[data-bs-dismiss="modal"]').click();
-                
-            } catch (error) {
-                console.error("Error updating payment details:", error);
-            }
-        } else {
-            // Show error if the amount doesn't match
-            alert("The entered amount does not match the total amount.");
-        }
+    if (orNumber && amount > 0 && amount === selectedTotalAmount) {
+        // Proceed with status update if all is valid
+        await updateStatus('paid');
+        await updateDoc(doc(firestore, 'apprehensions', selectedDocId), {
+            orNumber: orNumber,
+            totalAmount: amount,
+        });
+        fetchApprehensionsData(); // Re-fetch and update the table
     } else {
-        alert("Please fill out both OR Number and Amount fields.");
+        alert("Invalid input. Ensure OR Number is provided and the amount matches.");
     }
 });
 
-// Handle status filter change
-document.getElementById('statusFilter').addEventListener('change', (event) => {
-    selectedStatusFilter = event.target.value;
-    fetchApprehensionsData(); // Re-fetch data with the new filter
-});
-
-// Initialize and fetch the data
+// Initialize the data on page load
 fetchApprehensionsData();
