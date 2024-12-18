@@ -37,8 +37,8 @@ async function fetchApprehensionsData() {
         const paidData = [];
         const unpaidData = [];
 
+        // Update Paid and Unpaid Rows Rendering Logic
         data.forEach((data) => {
-            // Filter based on the selected status
             if (selectedStatusFilter && data.status !== selectedStatusFilter) {
                 return; // Skip this item if it doesn't match the selected filter
             }
@@ -48,56 +48,83 @@ async function fetchApprehensionsData() {
                 ? data.selectedViolations.map(violation => violation.name).join(', ')
                 : 'N/A';
 
-            // Default to 'overdue' if no status is available
-            const status = data.status || 'overdue'; // Ensure status is never undefined
+            const status = data.status || 'overdue';
             let statusBadge = '';
-            const totalAmount = parseFloat(data.totalAmount) || 0; // Ensure it's a number
+            const totalAmount = parseFloat(data.totalAmount) || 0;
 
             // Generate status badge based on status
             switch (status) {
                 case 'paid':
                     statusBadge = `<span class="badge bg-success w-100 px-1">${status}</span>`;
-                    paidTotal += totalAmount; // Add to paid total
-                    paidData.push({ row, data }); // Add to paid data array
+                    paidTotal += totalAmount;
+        
+                    // Add Details button for paid rows
+                    row.innerHTML = `
+                        <td>${data.fullName || 'N/A'}</td>
+                        <td>${data.orNumber || 'N/A'}</td>
+                        <td>${statusBadge}</td>
+                        <td>${data.address || 'N/A'}</td>
+                        <td>${data.plateNumber || 'N/A'}</td>
+                        <td>${data.vehicleType || 'N/A'}</td>
+                        <td>${violations}</td>
+                        <td>${new Date(data.timestamp * 1000).toLocaleDateString() || 'N/A'}</td>
+                        <td>${data.officerApprehend || 'N/A'}</td>
+                        <td>${formatAmount(totalAmount) || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-info view-details" data-id="${data.id}" data-or="${data.orNumber}" data-amount="${totalAmount}">
+                                Details
+                            </button>
+                        </td>
+                    `;
+                    paidTableBody.appendChild(row);
                     break;
-                case 'unpaid':
-                    statusBadge = `<span class="badge bg-warning w-100 px-1">${status}</span>`;
-                    overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
-                    unpaidData.push({ row, data }); // Add to unpaid data array
-                    break;
-                case 'overdue':
-                default:
-                    statusBadge = `<span class="badge bg-danger w-100 px-1">${status}</span>`;
-                    overdueUnpaidTotal += totalAmount; // Add to unpaid/overdue total
-                    unpaidData.push({ row, data }); // Add to unpaid data array
-                    break;
-            }
-
-            // Fill the table row with data
-            row.innerHTML = `
-                <td>${data.fullName || 'N/A'}</td>
-                <td>${data.orNumber || 'N/A'}</td>
-                <td>${statusBadge}</td>
-                <td>${data.address || 'N/A'}</td>
-                <td>${data.plateNumber || 'N/A'}</td>
-                <td>${data.vehicleType || 'N/A'}</td>
-                <td>${violations}</td>
-                <td>${new Date(data.timestamp * 1000).toLocaleDateString() || 'N/A'}</td>
-                <td>${data.officerApprehend || 'N/A'}</td>
-                <td>${formatAmount(totalAmount) || 'N/A'}</td> <!-- Format the amount -->
-                <td>
-                    <button class="btn btn-primary change-status" data-id="${data.id}" data-status="${status}" data-total="${totalAmount}">
-                        Edit
-                    </button>
-                </td>
-            `;
-
-            // Append rows to respective tables
-            if (status === 'paid') {
-                paidTableBody.appendChild(row);
-            } else {
-                unpaidTableBody.appendChild(row);
-            }
+                    case 'unpaid':
+                        statusBadge = `<span class="badge bg-warning w-100 px-1">${status}</span>`;
+                        overdueUnpaidTotal += totalAmount;
+                        row.innerHTML = `
+                            <td>${data.fullName || 'N/A'}</td>
+                            <td>${data.orNumber || 'N/A'}</td>
+                            <td>${statusBadge}</td>
+                            <td>${data.address || 'N/A'}</td>
+                            <td>${data.plateNumber || 'N/A'}</td>
+                            <td>${data.vehicleType || 'N/A'}</td>
+                            <td>${violations}</td>
+                            <td>${new Date(data.timestamp * 1000).toLocaleDateString() || 'N/A'}</td>
+                            <td>${data.officerApprehend || 'N/A'}</td>
+                            <td>${formatAmount(totalAmount) || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-primary change-status" data-id="${data.id}" data-status="${status}" data-total="${totalAmount}">
+                                    Edit
+                                </button>
+                            </td>
+                        `;
+                        unpaidTableBody.appendChild(row);
+                        break;
+    
+                    case 'overdue':
+                    default:
+                        statusBadge = `<span class="badge bg-danger w-100 px-1">${status}</span>`;
+                        overdueUnpaidTotal += totalAmount;
+                        row.innerHTML = `
+                            <td>${data.fullName || 'N/A'}</td>
+                            <td>${data.orNumber || 'N/A'}</td>
+                            <td>${statusBadge}</td>
+                            <td>${data.address || 'N/A'}</td>
+                            <td>${data.plateNumber || 'N/A'}</td>
+                            <td>${data.vehicleType || 'N/A'}</td>
+                            <td>${violations}</td>
+                            <td>${new Date(data.timestamp * 1000).toLocaleDateString() || 'N/A'}</td>
+                            <td>${data.officerApprehend || 'N/A'}</td>
+                            <td>${formatAmount(totalAmount) || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-primary change-status" data-id="${data.id}" data-status="${status}" data-total="${totalAmount}">
+                                    Edit
+                                </button>
+                            </td>
+                        `;
+                        unpaidTableBody.appendChild(row);
+                        break;
+                }
         });
 
         // Update the total amounts
@@ -148,109 +175,189 @@ const exportXLS = async () => {
     }
 };
 
-// Function to log actions to history
-async function logHistory(actionType, details) {
+
+async function logHistory(actionType, details, additionalInfo = {}) {
     try {
+        const auth = getAuth();
+        const currentUser = auth.currentUser;
+        console.log("Current user:", currentUser);
+
         const historyRef = collection(firestore, 'historyLogs');
-        const timestamp = new Date();
+        const timestamp = new Date().toISOString();
+
         const historyData = {
-            actionType: actionType,
-            details: details,
-            timestamp: timestamp.toISOString(), // Store in ISO format for easier sorting
+            actionType,
+            details,
+            performedBy,
+            timestamp,
         };
-        await addDoc(historyRef, historyData);
-        console.log("History logged successfully");
+
+        console.log("Attempting to log history:", historyData);
+
+        // Attempt to add a document to Firestore
+        const docRef = await addDoc(historyRef, historyData);
+        console.log("History logged successfully, Document ID:", docRef.id);
+
+        // Fetch and refresh history logs
+        await fetchHistoryLogs();
     } catch (error) {
         console.error("Error logging history:", error);
+        alert("Failed to log history. Check console for details.");
     }
 }
 
-// Open Status Modal
-function openStatusModal(docId, currentStatus, totalAmount) {
+
+
+async function fetchHistoryLogs() {
+    try {
+        const historySnapshot = await getDocs(collection(firestore, 'historyLogs'));
+        const historyData = [];
+
+        historySnapshot.forEach((docSnapshot) => {
+            const log = docSnapshot.data();
+            console.log("Fetched log:", log); // Debug log
+            historyData.push(log);
+        });
+
+        const historyModalBody = document.getElementById('historyModalBody');
+        historyModalBody.innerHTML = '';
+
+        if (historyData.length > 0) {
+            historyData.forEach((log) => {
+                const logElement = document.createElement('div');
+                logElement.className = 'history-log-item p-2 mb-2 border-bottom';
+                logElement.innerHTML = `
+                    <strong>${log.actionType}</strong> - ${log.details} <br>
+                    <small>By: ${log.performedBy || 'Unknown'}</small><br>
+                    ${log.orNumber ? `<small>OR Number: ${log.orNumber}</small><br>` : ''} 
+                    ${log.totalPayment ? `<small>Total Payment: ${log.totalPayment}</small><br>` : ''} 
+                    <small>${new Date(log.timestamp).toLocaleString()}</small>
+                `;
+                historyModalBody.appendChild(logElement);
+            });
+        } else {
+            historyModalBody.innerHTML = '<p class="text-center text-muted">No history logs available.</p>';
+        }
+    } catch (error) {
+        console.error("Error fetching history logs:", error);
+    }
+}
+
+
+
+// Unified status and payment modal logic
+function openStatusPaymentModal(docId, currentStatus, totalAmount) {
     selectedDocId = docId;
-    selectedTotalAmount = totalAmount; // Save the total amount for later validation
+    selectedTotalAmount = totalAmount || 0; // Ensure totalAmount is assigned
+
     const statusSelect = document.getElementById('statusSelect');
+    const paymentFields = document.getElementById('paymentFields');
+
+    // Set the current status in the dropdown
     statusSelect.value = currentStatus;
-    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+
+    // Show or hide payment fields based on the status
+    if (currentStatus === 'paid') {
+        paymentFields.classList.remove('d-none');
+    } else {
+        paymentFields.classList.add('d-none');
+    }
+
+    const modal = new bootstrap.Modal(document.getElementById('statusPaymentModal'));
     modal.show();
 }
 
-// Close Status Modal
-document.getElementById('closeStatusModal').addEventListener('click', () => {
-    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
-    modal.hide();
-});
 
-// Handle Status selection and show Payment Modal
-document.getElementById('statusDoneBtn').addEventListener('click', () => {
-    const selectedStatus = document.getElementById('statusSelect').value;
-
-    if (selectedStatus === 'paid') {
-        // If 'Paid' is selected, show the Payment Modal
-        document.querySelector('[data-bs-dismiss="modal"]').click();
-
-        // Show the Payment Modal to ask for OR Number and Amount
-        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
-        paymentModal.show();
-    } else {
-        // For other statuses, update immediately
-        updateStatus(selectedStatus);
-    }
-});
-
-// Event delegation for the change-status button
-document.addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('change-status')) {
-        const docId = event.target.getAttribute('data-id');
-        const currentStatus = event.target.getAttribute('data-status');
-        const totalAmount = parseFloat(event.target.getAttribute('data-total'));
-        openStatusModal(docId, currentStatus, totalAmount);
-    }
-});
-
-
-// Update Status in Firestore (only for non-'paid' statuses)
 async function updateStatus(newStatus) {
     try {
         const docRef = doc(firestore, 'apprehensions', selectedDocId);
         await updateDoc(docRef, { status: newStatus });
 
-        // Log the action to history
         const actionDetails = `Status changed to ${newStatus} for document ID: ${selectedDocId}`;
+        
+        // Call logHistory and confirm it's triggered
+        console.log("Calling logHistory with details:", actionDetails);
         await logHistory('Status Change', actionDetails);
 
         console.log("Status updated and history logged successfully");
+
         fetchApprehensionsData(); // Re-fetch and update the table
-        document.querySelector('[data-bs-dismiss="modal"]').click();
     } catch (error) {
         console.error("Error updating status:", error);
     }
 }
 
-// Handle Payment Modal's Done button click
-document.getElementById('paymentDoneBtn').addEventListener('click', async () => {
+
+// Event listeners
+document.getElementById('statusPaymentDoneBtn').addEventListener('click', async () => {
+    const selectedStatus = document.getElementById('statusSelect').value;
     const orNumber = document.getElementById('orNumber').value;
     const amount = parseFloat(document.getElementById('amount').value) || 0;
 
-    if (orNumber && amount > 0 && amount === selectedTotalAmount) {
-        // Proceed with status update if all is valid
-        await updateStatus('paid');
-        await updateDoc(doc(firestore, 'apprehensions', selectedDocId), {
-            orNumber: orNumber,
-            totalAmount: amount,
-        });
+    console.log("Validation check:");
+    console.log("OR Number:", orNumber);
+    console.log("Amount:", amount);
+    console.log("Selected Total Amount:", selectedTotalAmount);
 
-        // Log the payment action
-        const actionDetails = `Payment of ${formatAmount(amount)} made for document ID: ${selectedDocId}`;
-        await logHistory('Payment', actionDetails);
+    try {
+        if (selectedStatus === 'paid') {
+            // Validate payment details
+            if (!orNumber || amount <= 0 || amount !== selectedTotalAmount) {
+                console.error("Validation failed");
+                alert("Invalid input. Ensure OR Number is provided and the amount matches.");
+                return;
+            }
 
-        fetchApprehensionsData(); // Re-fetch and update the table
-    } else {
-        alert("Invalid input. Ensure OR Number is provided and the amount matches.");
+            // Update payment details and status in Firestore
+            await updateDoc(doc(firestore, 'apprehensions', selectedDocId), {
+                status: selectedStatus,
+                orNumber: orNumber,
+                totalAmount: amount,
+            });
+
+            await logHistory('Payment', `Payment of ${amount} made`, { orNumber, totalPayment: amount });
+        } else {
+            await updateStatus(selectedStatus); // Call updateStatus for non-paid updates
+        }
+
+        fetchApprehensionsData();
+        const modal = bootstrap.Modal.getInstance(document.getElementById('statusPaymentModal'));
+        modal.hide();
+    } catch (error) {
+        console.error("Error updating status or payment:", error);
     }
 });
 
-// History Logs Button Click
+
+
+document.getElementById('statusSelect').addEventListener('change', () => {
+    const selectedStatus = document.getElementById('statusSelect').value;
+    const paymentFields = document.getElementById('paymentFields');
+
+    if (selectedStatus === 'paid') {
+        paymentFields.classList.remove('d-none');
+    } else {
+        paymentFields.classList.add('d-none');
+    }
+});
+
+document.addEventListener('click', (event) => {
+    if (event.target && event.target.classList.contains('change-status')) {
+        const docId = event.target.getAttribute('data-id');
+        const currentStatus = event.target.getAttribute('data-status');
+        const totalAmount = parseFloat(event.target.getAttribute('data-total'));
+        openStatusPaymentModal(docId, currentStatus, totalAmount);
+    }
+
+    if (event.target && event.target.classList.contains('view-details')) {
+        const orNumber = event.target.getAttribute('data-or');
+        const amount = formatAmount(parseFloat(event.target.getAttribute('data-amount')));
+
+        // Display payment details in an alert or modal
+        alert(`Payment Details:\n\nOR Number: ${orNumber}\nAmount Paid: ${amount}`);
+    }
+});
+
 document.getElementById('historyLogsBtn').addEventListener('click', async () => {
     try {
         // Fetch history logs from Firestore
@@ -262,24 +369,37 @@ document.getElementById('historyLogsBtn').addEventListener('click', async () => 
             historyData.push(log);
         });
 
-        // Display history logs in a modal or alert
+        // Build HTML for the history logs
+        const historyModalBody = document.getElementById('historyModalBody');
+        historyModalBody.innerHTML = ''; // Clear existing logs
+
         if (historyData.length > 0) {
-            let historyContent = '<ul>';
             historyData.forEach((log) => {
-                historyContent += `<li><strong>${log.actionType}</strong> - ${log.details} <br><small>${new Date(log.timestamp).toLocaleString()}</small></li>`;
+                const logElement = document.createElement('div');
+                logElement.className = 'history-log-item p-2 mb-2 border-bottom';
+                logElement.innerHTML = `
+                    <strong>${log.actionType}</strong> - ${log.details} <br>
+                    <small>By: ${log.performedBy || 'Unknown'}</small><br>
+                    ${log.orNumber ? `<small>OR Number: ${log.orNumber}</small><br>` : ''}
+                    ${log.totalPayment ? `<small>Total Payment: ${log.totalPayment}</small><br>` : ''}
+                    <small>${new Date(log.timestamp).toLocaleString()}</small>
+                `;
+                historyModalBody.appendChild(logElement);
             });
-            historyContent += '</ul>';
-            // Show the history logs in a modal or alert
-            alert(`History Logs:\n\n${historyContent}`);
         } else {
-            alert('No history logs available.');
+            historyModalBody.innerHTML = '<p class="text-center text-muted">No history logs available.</p>';
         }
 
+        // Show the modal
+        const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
+        historyModal.show();
     } catch (error) {
         console.error("Error fetching history logs:", error);
         alert('Failed to fetch history logs.');
     }
 });
 
+
 // Initialize the data on page load
 fetchApprehensionsData();
+

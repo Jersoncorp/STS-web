@@ -38,114 +38,122 @@
                         </select>
                         <button type="button" class="btn btn-success" id="exportXLS">Export</button>
                         <button type="button" class="btn btn-info" id="historyLogsBtn">History Logs</button>
-
-                    </div>
-                </div>      
-
-                        <!-- Total Amounts -->
-                        <div class="row mb-3">
-                            <div class="row mb-3">
-                                <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Overdue Total: 0</h1>
-                            </div>
-                            <div class="row">
-                                <h1 id="totalPaidAmount" class="text-success">Total Paid Amount: 0</h1>
-                            </div>
-                        </div>
-
-                        <div class="row-body">
-                            <div class="row">
-                                <!-- Paid Table -->
-                                <div class="col-md-6 mb-4">
-                                    <div class="paid">
-                                        <h4>Paid Apprehensions</h4>
-                                        <div class="table-container">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Name</th>
-                                                        <th scope="col">OR Number</th>
-                                                        <th scope="col">Status</th>
-                                                        <th scope="col">Address</th>
-                                                        <th scope="col">Plate No.</th>
-                                                        <th scope="col">Vehicle Type</th>
-                                                        <th scope="col">Violations</th>
-                                                        <th scope="col">Date</th>
-                                                        <th scope="col">Apprehending Officer</th>
-                                                        <th scope="col">Total Amount</th>
-                                                        <th scope="col">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="paidDataTableBody"></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                <!-- Unpaid Table -->
-                                <div class="col-md-6 mb-4">
-                                    <div class="unpaid">
-                                        <h4>Unpaid Apprehensions</h4>
-                                        <div class="table-container">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Name</th>
-                                                        <th scope="col">OR Number</th>
-                                                        <th scope="col">Status</th>
-                                                        <th scope="col">Address</th>
-                                                        <th scope="col">Plate No.</th>
-                                                        <th scope="col">Vehicle Type</th>
-                                                        <th scope="col">Violation</th>
-                                                        <th scope="col">Date</th>
-                                                        <th scope="col">Apprehending Officer</th>
-                                                        <th scope="col">Amount</th>
-                                                        <th scope="col">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="unpaidDataTableBody"></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
                     </div>
                 </div>
 
-        <!-- First Modal for Status Change -->
-        <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="statusModalLabel">Change Status</h5>
-                        <button type="button" class="btn-close" id="closeStatusModal" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Total Amounts -->
+                <div class="row mb-3">
+                    <div class="row mb-3">
+                        <h1 id="totalUnpaidAmount" class="text-warning">Unpaid/Overdue Total: 0</h1>
                     </div>
-                    <div class="modal-body">
-                        <select id="statusSelect" class="form-select">
-                            <option value="paid">Paid</option>
-                            <option value="unpaid">Unpaid</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
+                    <div class="row">
+                        <h1 id="totalPaidAmount" class="text-success">Total Paid Amount: 0</h1>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="statusDoneBtn">Done</button>
+                </div>
+
+                <div class="row-body">
+                    <div class="row">
+                        <!-- Paid Table -->
+                        <div class="col-md-6 mb-4">
+                            <div class="paid">
+                                <h4>Paid Apprehensions</h4>
+                                <div class="table-container">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">OR Number</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Plate No.</th>
+                                                <th scope="col">Vehicle Type</th>
+                                                <th scope="col">Violations</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Apprehending Officer</th>
+                                                <th scope="col">Total Amount</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="paidDataTableBody">
+                                            <!-- Rows will be dynamically populated here with "Details" button -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Unpaid Table -->
+                        <div class="col-md-6 mb-4">
+                            <div class="unpaid">
+                                <h4>Unpaid Apprehensions</h4>
+                                <div class="table-container">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">OR Number</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Plate No.</th>
+                                                <th scope="col">Vehicle Type</th>
+                                                <th scope="col">Violation</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Apprehending Officer</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="unpaidDataTableBody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Payment Modal (Bootstrap Modal) -->
-        <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <!-- History Logs Modal -->
+        <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="historyModalLabel">History Logs</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="historyModalBody" class="overflow-auto" style="max-height: 400px;">
+                            <!-- History logs will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unified Status and Payment Modal -->
+        <div class="modal fade" id="statusPaymentModal" tabindex="-1" aria-labelledby="statusPaymentModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="paymentModalLabel">Enter Payment Details</h5>
-                        <button type="button" class="btn-close" id="closePaymentModal" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h5 class="modal-title" id="statusPaymentModalLabel">Update Status or Payment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="paymentForm">
+                        <!-- Status Selector -->
+                        <div class="mb-3">
+                            <label for="statusSelect" class="form-label">Status:</label>
+                            <select id="statusSelect" class="form-select">
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                                <option value="overdue">Overdue</option>
+                            </select>
+                        </div>
+
+                        <!-- Payment Details (Hidden by Default) -->
+                        <div id="paymentFields" class="d-none">
                             <div class="mb-3">
                                 <label for="orNumber" class="form-label">OR Number:</label>
                                 <input type="text" id="orNumber" class="form-control" placeholder="Enter OR Number">
@@ -154,22 +162,20 @@
                                 <label for="amount" class="form-label">Amount:</label>
                                 <input type="number" id="amount" class="form-control" placeholder="Enter Amount">
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="paymentDoneBtn">Done</button>
+                        <button type="button" class="btn btn-primary" id="statusPaymentDoneBtn">Done</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Scripts -->
     <script src="../../resources/script/config.js" type="module"></script>
     <script src="../../resources/script/script.js" type="module"></script>
     <script src="../reports/script/script.js" type="module"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
@@ -180,7 +186,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
