@@ -1,6 +1,6 @@
 // Import Firestore functions
 import { firestore } from '../../../resources/script/config.js';
-import { collection, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+import { collection, getDocs, doc, updateDoc, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
 let selectedDocId = null;
 let selectedTotalAmount = 0; // Store the total amount for validation
@@ -148,6 +148,23 @@ const exportXLS = async () => {
     }
 };
 
+// Function to log actions to history
+async function logHistory(actionType, details) {
+    try {
+        const historyRef = collection(firestore, 'historyLogs');
+        const timestamp = new Date();
+        const historyData = {
+            actionType: actionType,
+            details: details,
+            timestamp: timestamp.toISOString(), // Store in ISO format for easier sorting
+        };
+        await addDoc(historyRef, historyData);
+        console.log("History logged successfully");
+    } catch (error) {
+        console.error("Error logging history:", error);
+    }
+}
+
 // Open Status Modal
 function openStatusModal(docId, currentStatus, totalAmount) {
     selectedDocId = docId;
@@ -181,20 +198,6 @@ document.getElementById('statusDoneBtn').addEventListener('click', () => {
     }
 });
 
-// Update Status in Firestore (only for non-'paid' statuses)
-async function updateStatus(newStatus) {
-    try {
-        const docRef = doc(firestore, 'apprehensions', selectedDocId);
-        await updateDoc(docRef, { status: newStatus });
-
-        console.log("Status updated successfully");
-        fetchApprehensionsData(); // Re-fetch and update the table
-        document.querySelector('[data-bs-dismiss="modal"]').click();
-    } catch (error) {
-        console.error("Error updating status:", error);
-    }
-}
-
 // Event delegation for the change-status button
 document.addEventListener('click', (event) => {
     if (event.target && event.target.classList.contains('change-status')) {
@@ -204,6 +207,25 @@ document.addEventListener('click', (event) => {
         openStatusModal(docId, currentStatus, totalAmount);
     }
 });
+
+
+// Update Status in Firestore (only for non-'paid' statuses)
+async function updateStatus(newStatus) {
+    try {
+        const docRef = doc(firestore, 'apprehensions', selectedDocId);
+        await updateDoc(docRef, { status: newStatus });
+
+        // Log the action to history
+        const actionDetails = `Status changed to ${newStatus} for document ID: ${selectedDocId}`;
+        await logHistory('Status Change', actionDetails);
+
+        console.log("Status updated and history logged successfully");
+        fetchApprehensionsData(); // Re-fetch and update the table
+        document.querySelector('[data-bs-dismiss="modal"]').click();
+    } catch (error) {
+        console.error("Error updating status:", error);
+    }
+}
 
 // Handle Payment Modal's Done button click
 document.getElementById('paymentDoneBtn').addEventListener('click', async () => {
@@ -217,9 +239,45 @@ document.getElementById('paymentDoneBtn').addEventListener('click', async () => 
             orNumber: orNumber,
             totalAmount: amount,
         });
+
+        // Log the payment action
+        const actionDetails = `Payment of ${formatAmount(amount)} made for document ID: ${selectedDocId}`;
+        await logHistory('Payment', actionDetails);
+
         fetchApprehensionsData(); // Re-fetch and update the table
     } else {
         alert("Invalid input. Ensure OR Number is provided and the amount matches.");
+    }
+});
+
+// History Logs Button Click
+document.getElementById('historyLogsBtn').addEventListener('click', async () => {
+    try {
+        // Fetch history logs from Firestore
+        const historySnapshot = await getDocs(collection(firestore, 'historyLogs'));
+        const historyData = [];
+
+        historySnapshot.forEach((docSnapshot) => {
+            const log = docSnapshot.data();
+            historyData.push(log);
+        });
+
+        // Display history logs in a modal or alert
+        if (historyData.length > 0) {
+            let historyContent = '<ul>';
+            historyData.forEach((log) => {
+                historyContent += `<li><strong>${log.actionType}</strong> - ${log.details} <br><small>${new Date(log.timestamp).toLocaleString()}</small></li>`;
+            });
+            historyContent += '</ul>';
+            // Show the history logs in a modal or alert
+            alert(`History Logs:\n\n${historyContent}`);
+        } else {
+            alert('No history logs available.');
+        }
+
+    } catch (error) {
+        console.error("Error fetching history logs:", error);
+        alert('Failed to fetch history logs.');
     }
 });
 

@@ -61,6 +61,7 @@ async function handleForgotPassword(event) {
 
     if (email) {
       try {
+        console.log("Sending password reset email to:", email); // Debugging email
         await sendPasswordResetEmail(auth, email);
         Swal.fire({
           icon: "success",
@@ -68,11 +69,19 @@ async function handleForgotPassword(event) {
           text: "Please check your email to reset your password.",
         });
       } catch (error) {
-        console.error("Forgot password error:", error); // Log error details
+        console.error("Forgot password error:", error); // Log full error object
+
+        let errorMessage = "An error occurred. Please try again.";
+        if (error.code === "auth/user-not-found") {
+          errorMessage = "No account found with this email address.";
+        } else if (error.code === "auth/invalid-email") {
+          errorMessage = "Please enter a valid email address.";
+        }
+
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "An error occurred. Please try again.",
+          text: errorMessage,
         });
       }
     } else {
@@ -84,6 +93,8 @@ async function handleForgotPassword(event) {
     }
   }
 }
+
+
 
 // -------------------------------------------------- Form Validation
 

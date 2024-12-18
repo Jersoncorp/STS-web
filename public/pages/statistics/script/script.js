@@ -8,7 +8,7 @@ async function fetchApprehensionData() {
     const monthlyData = {};
     const yearlyData = {};
     const locationData = {};
-    const violationsMonthlyData = {};  // New data structure for violations per month
+    const violationsMonthlyData = {}; // Store an array of violations per month
 
     try {
         const querySnapshot = await getDocs(collection(firestore, 'apprehensions'));
@@ -16,7 +16,7 @@ async function fetchApprehensionData() {
             const data = doc.data();
             const timestamp = data.timestamp; // Assuming 'timestamp' is the field name in epoch format
             const address = data.address; // Assuming 'address' is the field name
-            const violation = data.violation; // Assuming 'violation' is the field containing violation details
+            const selectedViolations = data.selectedViolations || []; // Assuming 'selectedViolations' is an array
 
             // Convert epoch timestamp to date
             const date = new Date(timestamp * 1000);
@@ -49,11 +49,11 @@ async function fetchApprehensionData() {
                 locationData[address] = 1;
             }
 
-            // Count violations per month (new logic)
+            // Aggregate violations by month
             if (!violationsMonthlyData[month]) {
-                violationsMonthlyData[month] = 0;
+                violationsMonthlyData[month] = [];
             }
-            violationsMonthlyData[month]++;
+            violationsMonthlyData[month].push(...selectedViolations);
         });
     } catch (error) {
         console.error("Error fetching apprehension data:", error);
@@ -128,13 +128,15 @@ async function renderCharts() {
 
     // Prepare violations per month data for the chart
     const violationsMonthlyLabels = Object.keys(violationsMonthlyData);
-    const violationsMonthlyCounts = Object.values(violationsMonthlyData);
+    const violationsMonthlyCounts = violationsMonthlyLabels.map(
+        month => violationsMonthlyData[month].join(', ') // Concatenate violations for display
+    );
     
     const violationsMonthlyChartData = {
         labels: violationsMonthlyLabels,
         datasets: [{
             label: 'Violations per Month',
-            data: violationsMonthlyCounts,
+            data: violationsMonthlyCounts.map(() => 1), // Placeholder as data won't be numerical
             backgroundColor: 'rgba(153, 102, 255, 0.5)',
             borderColor: 'rgba(153, 102, 255, 1)',
             borderWidth: 1
@@ -194,6 +196,16 @@ async function renderCharts() {
         type: 'bar',
         data: violationsMonthlyChartData,
         options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const month = context.label;
+                            return violationsMonthlyData[month].join(', ');
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true
