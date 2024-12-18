@@ -29,7 +29,7 @@ async function fetchApprehensionsData() {
             const docData = docSnapshot.data();
             data.push({ id: docSnapshot.id, ...docData });
         });
-
+        
         // Sort the data by timestamp (most recent first)
         data.sort((a, b) => b.timestamp - a.timestamp);
 

@@ -1,67 +1,97 @@
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.paid, .unpaid {
-    flex: 1 1 48%;
-    box-sizing: border-box;
-    margin-bottom: 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-}
-
 .row-body {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px; /* Gap between the two tables */
     justify-content: space-between;
     width: 100%;
 }
 
+.paid, .unpaid {
+    flex: 1 1 48%; /* Both tables take 48% width */
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    overflow: hidden; /* Prevent unwanted overflow */
+}
+
 .table-container {
-    width: 100%;
-    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-height: 100%; /* Prevent vertical scroll */
+    overflow: hidden;
 }
 
 .table {
     width: 100%;
-    min-width: 600px; /* Minimum width to prevent table from shrinking too much */
+    table-layout: fixed; /* Ensure equal column widths */
+    font-size: 0.8rem; /* Reduce text size for fitting */
     border-collapse: collapse;
 }
 
+.btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.4rem;
+    min-width: 30px;
+    display: inline-block;
+}
+
 .table th, .table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-top: 1px solid #dee2e6;
+    padding: 0.4rem; /* Compact padding */
+    text-align: center; /* Center-align text */
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Prevent content overflow */
+    text-overflow: ellipsis; /* Show ellipsis for long content */
+    border: 1px solid #dee2e6;
+    font-size: 0.7rem; /* Small font size for compact layout */
 }
 
 .table thead {
-    background-color: #f8f9fa;
-}
-
-.table-striped tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
+    background-color: #f1f1f1;
+    font-size: 0.9rem;
+    font-weight: bold;
 }
 
 h4 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    color: #007bff;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    font-weight: bold;
+    color: #0401b6;
 }
 
+/* Totals Styling */
 #totalPaidAmount, #totalUnpaidAmount {
-    margin-top: 15px;
+    font-size: 1.5rem;
     font-weight: bold;
-    font-size: 1.2rem;
-    color: #28a745;
+    margin: 10px 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .row-body {
+        flex-direction: column; /* Stack tables vertically on small screens */
+    }
+
+    .paid, .unpaid {
+        flex: 1 1 100%;
+    }
+
+    .table {
+        font-size: 0.75rem; /* Reduce text size for small screens */
+    }
 }
 
 @media (max-width: 768px) {
-    .paid, .unpaid {
-        flex: 1 1 100%; /* Stack columns vertically on small screens */
+    h4 {
+        font-size: 1rem;
+    }
+
+    #totalPaidAmount, #totalUnpaidAmount {
+        font-size: 1.2rem;
     }
 }

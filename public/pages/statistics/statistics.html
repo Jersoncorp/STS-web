@@ -23,56 +23,65 @@
         </div>
 
         <!-- Main -->
-        <div class="main container-fluid px-5 py-4">
-            <div class="row flex-nowrap mb-3">
-                <h4 class="fw-bold">Statistics</h4>
-            </div>
-
-            <div class="row g-4 mb-3">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Individuals Apprehended (Daily)</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="dailyChart"></canvas>
-                        </div>
+        <div class="row g-4 mb-3">
+            <!-- Existing Cards -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Individuals Apprehended (Daily)</h5>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Apprehensions by Location</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="locationChart"></canvas>
-                        </div>
+                    <div class="card-body">
+                        <canvas id="dailyChart"></canvas>
                     </div>
                 </div>
             </div>
-
-            <div class="row g-4 mb-3">
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Individuals Apprehended (Monthly)</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="monthlyChart"></canvas>
-                        </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Apprehensions by Location</h5>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">Individuals Apprehended (Yearly)</h5>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="yearlyChart"></canvas>
-                        </div>
+                    <div class="card-body">
+                        <canvas id="locationChart"></canvas>
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <div class="row g-4 mb-3">
+            <!-- Additional Card for Violations per Month -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Violations per Month</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="violationsMonthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- Existing Cards -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Individuals Apprehended (Monthly)</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Individuals Apprehended (Yearly)</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="yearlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
             
         </div>
     </div>

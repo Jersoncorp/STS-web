@@ -26,7 +26,7 @@
             <div class="px-5 py-4">
                 <div class="row mb-3">
                     <div class="col">
-                        <h4 class="fw-bold">List of Violators</h4>
+                        <h4 class="fw-bold">List of Apprehensions</h4>
                     </div>
                     <div class="col text-end">
                         <select id="statusFilter" class="form-select d-inline w-auto ms-3">
@@ -50,54 +50,60 @@
                         </div>
 
                         <div class="row-body">
-                            <div class="paid">
-                                <h4>Paid Apprehensions</h4>
-                                <div class="table-container">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">OR Number</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Plate No.</th>
-                                                <th scope="col">Vehicle Type</th>
-                                                <th scope="col">Violations</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Apprehending Officer</th>
-                                                <th scope="col">Total Amount</th>
-                                                <th scope="col">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="paidDataTableBody"></tbody>
-                                    </table>
+                            <div class="row">
+                                <!-- Paid Table -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="paid">
+                                        <h4>Paid Apprehensions</h4>
+                                        <div class="table-container">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">OR Number</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Plate No.</th>
+                                                        <th scope="col">Vehicle Type</th>
+                                                        <th scope="col">Violations</th>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Apprehending Officer</th>
+                                                        <th scope="col">Total Amount</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="paidDataTableBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="totalPaidAmount"></div>
-                            </div>
                         
-                            <div class="unpaid">
-                                <h4>Unpaid Apprehensions</h4>
-                                <div class="table-container">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Name</th>
-                                                <th scope="col">OR Number</th>
-                                                <th scope="col">Status</th>
-                                                <th scope="col">Address</th>
-                                                <th scope="col">Plate No.</th>
-                                                <th scope="col">Vehicle Type</th>
-                                                <th scope="col">Violation</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Apprehending Officer</th>
-                                                <th scope="col">Amount</th>
-                                                <th scope="col">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="unpaidDataTableBody"></tbody>
-                                    </table>
+                                <!-- Unpaid Table -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="unpaid">
+                                        <h4>Unpaid Apprehensions</h4>
+                                        <div class="table-container">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">OR Number</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Address</th>
+                                                        <th scope="col">Plate No.</th>
+                                                        <th scope="col">Vehicle Type</th>
+                                                        <th scope="col">Violation</th>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Apprehending Officer</th>
+                                                        <th scope="col">Amount</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="unpaidDataTableBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="totalUnpaidAmount"></div>
                             </div>
                         </div>
                         

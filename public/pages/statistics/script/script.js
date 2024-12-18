@@ -8,6 +8,7 @@ async function fetchApprehensionData() {
     const monthlyData = {};
     const yearlyData = {};
     const locationData = {};
+    const violationsMonthlyData = {};  // New data structure for violations per month
 
     try {
         const querySnapshot = await getDocs(collection(firestore, 'apprehensions'));
@@ -15,6 +16,7 @@ async function fetchApprehensionData() {
             const data = doc.data();
             const timestamp = data.timestamp; // Assuming 'timestamp' is the field name in epoch format
             const address = data.address; // Assuming 'address' is the field name
+            const violation = data.violation; // Assuming 'violation' is the field containing violation details
 
             // Convert epoch timestamp to date
             const date = new Date(timestamp * 1000);
@@ -46,17 +48,23 @@ async function fetchApprehensionData() {
             } else {
                 locationData[address] = 1;
             }
+
+            // Count violations per month (new logic)
+            if (!violationsMonthlyData[month]) {
+                violationsMonthlyData[month] = 0;
+            }
+            violationsMonthlyData[month]++;
         });
     } catch (error) {
         console.error("Error fetching apprehension data:", error);
     }
 
-    return { dailyData, monthlyData, yearlyData, locationData };
+    return { dailyData, monthlyData, yearlyData, locationData, violationsMonthlyData };
 }
 
 // Function to prepare and render charts
 async function renderCharts() {
-    const { dailyData, monthlyData, yearlyData, locationData } = await fetchApprehensionData();
+    const { dailyData, monthlyData, yearlyData, locationData, violationsMonthlyData } = await fetchApprehensionData();
 
     // Prepare daily data for the chart
     const dailyLabels = Object.keys(dailyData);
@@ -118,6 +126,21 @@ async function renderCharts() {
         }]
     };
 
+    // Prepare violations per month data for the chart
+    const violationsMonthlyLabels = Object.keys(violationsMonthlyData);
+    const violationsMonthlyCounts = Object.values(violationsMonthlyData);
+    
+    const violationsMonthlyChartData = {
+        labels: violationsMonthlyLabels,
+        datasets: [{
+            label: 'Violations per Month',
+            data: violationsMonthlyCounts,
+            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            borderWidth: 1
+        }]
+    };
+
     // Configurations for charts
     const configDaily = {
         type: 'line',
@@ -167,11 +190,24 @@ async function renderCharts() {
         }
     };
 
+    const configViolationsMonthly = {
+        type: 'bar',
+        data: violationsMonthlyChartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
     // Render Charts
     new Chart(document.getElementById('dailyChart'), configDaily);
     new Chart(document.getElementById('monthlyChart'), configMonthly);
     new Chart(document.getElementById('yearlyChart'), configYearly);
     new Chart(document.getElementById('locationChart'), configLocation);
+    new Chart(document.getElementById('violationsMonthlyChart'), configViolationsMonthly); // New chart for violations per month
 }
 
 // Call the renderCharts function to execute
