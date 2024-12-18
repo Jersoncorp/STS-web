@@ -1,12 +1,8 @@
-<aside id="sidebar" class="h-100 w-100 position-sticky">
-    <div class="d-flex justify-content-between align-items-center p-3 bg-dark text-white">
-        <div class="sidebar-logo">
-            <a href="#" class="text-white">STS</a>
-        </div>
-        <button class="toggle-btn" type="button">
-            <i class="lni lni-grid-alt"></i>
-        </button>
+<nav id="top-nav" class="h-100 w-100 position-sticky bg-dark text-white d-flex justify-content-between align-items-center p-3">
+    <div class="sidebar-logo">
+        <a href="#" class="text-white">STS</a>
     </div>
+
     <ul class="sidebar-nav d-flex mb-0">
         <li class="sidebar-item">
             <a href="../dashboard/dashboard.html" class="sidebar-link">
@@ -23,7 +19,7 @@
         <li class="sidebar-item">
             <a href="../reports/reports.html" class="sidebar-link">
                 <i class="lni lni-bar-chart"></i> 
-                <span>List of Apprehensions</span>
+                <span>Reports</span>
             </a>
         </li>
         <li class="sidebar-item">
@@ -40,24 +36,20 @@
         </li>
     </ul>
 
-    <div class="sidebar-footer d-flex justify-content-center">
+    <div class="sidebar-footer d-flex align-items-center">
         <li class="sidebar-item">
             <a href="../settings/settings.html" class="sidebar-link">
                 <i class="lni lni-cog"></i>
                 <span>Settings</span>
             </a>
         </li>
-        <li class="sidebar-item mb-3">
-            <a id="logout" href="#" class="sidebar-link">
-                <i class="lni lni-exit"></i> 
-                <span>Logout</span>
-            </a>
-        </li>
-        
-        <li class="sidebar-item"> 
-            <div class="form-check form-switch ms-4 mb-3">
-                <input class="form-check-input" type="checkbox" id="darkModeSwitch" checked aria-label="Switch between light and dark mode" data-bs-toggle="tooltip" data-bs-placement="top" title="Switch between light and dark mode">
-            </div>
-        </li>
+        <div class="sidebar-footer d-flex align-items-center">
+            <li class="sidebar-item">
+                <a id="logout" href="#" class="sidebar-link">
+                    <i class="lni lni-exit"></i> 
+                    <span>Logout</span>
+                </a>
+            </li>
+        </div>
     </div>
-</aside>
+</nav>
