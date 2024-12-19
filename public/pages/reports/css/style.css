@@ -7,28 +7,34 @@
 
 .title {
     color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .row-body {
     display: flex;
-    gap: 10px; /* Gap between the two tables */
-    justify-content: space-between;
+    flex-direction: column; /* Stacked layout by default */
+    gap: 20px; /* Increased gap between tables */
+    justify-content: flex-start;
     width: 100%;
+    margin-top: 20px;
 }
 
 .paid, .unpaid {
-    flex: 1 1 48%; /* Both tables take 48% width */
-    box-sizing: border-box;
-    margin-bottom: 15px;
+    flex: 1;
+    width: 100%; /* Ensure the tables take up the full width of the container */
+    margin-bottom: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #f8f9fa;
-    overflow: hidden; /* Prevent unwanted overflow */
+    overflow: hidden;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .table-container {
     max-height: 100%; /* Prevent vertical scroll */
-    overflow: hidden;
+    overflow-x: auto; /* Allow horizontal scrolling if content is too wide */
 }
 
 .table {
@@ -75,7 +81,10 @@
     }
 
     .paid, .unpaid {
-        flex: 1 1 100%;
+        width: 100%; /* Allow the tables to take full width when stacked */
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 20px;
     }
 
     .table {
@@ -88,7 +97,9 @@
         font-size: 1rem;
     }
 
-    #totalPaidAmount, #totalUnpaidAmount {
-        font-size: 1.2rem;
+    #totalUnpaidAmount,
+    #totalPaidAmount {
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
+        margin-bottom: 10px; /* Add margin between the amounts */
     }
 }
