@@ -57,13 +57,14 @@
     font-weight: bold;
 }
 
+/* Set the color of h4 tags to black */
 h4 {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    font-weight: bold;
-    color: #0401b6;
+    color: black;
 }
 
+.title {
+    color: black;
+}
 /* Totals Styling */
 #totalPaidAmount, #totalUnpaidAmount {
     font-size: 1.5rem;
