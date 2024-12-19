@@ -94,6 +94,8 @@ const handleAddDriverForm = async (event) => {
     const sex = document.getElementById('sex').value;
     const profilePictureFile = document.getElementById('profilePicture').files[0];
 
+    licensedNumber = licensedNumber.toUpperCase();
+
     try {
         let profilePictureURL = '';
         if (profilePictureFile) {
@@ -167,6 +169,8 @@ const editDriver = (driverId, driverData) => {
             const address = document.getElementById('editAddress').value;
             const sex = document.getElementById('editSex').value;
             const profilePictureFile = document.getElementById('editProfilePicture').files[0];
+
+            licensedNumber = licensedNumber.toUpperCase();
 
             try {
                 const driverRef = doc(firestore, 'registered_drivers', driverId);

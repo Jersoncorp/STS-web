@@ -1,6 +1,7 @@
 // Import Firestore functions
 import { firestore } from '../../../resources/script/config.js';
 import { collection, getDocs, doc, updateDoc, addDoc } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js'; // Import onAuthStateChanged
 
 let selectedDocId = null;
 let selectedTotalAmount = 0; // Store the total amount for validation
@@ -158,8 +159,15 @@ const exportXLS = async () => {
                 "Date": new Date(apprehensionData.timestamp * 1000).toLocaleDateString() || 'N/A',
                 "Officer Apprehended": apprehensionData.officerApprehend || 'N/A',
                 "Total Amount": formatAmount(apprehensionData.totalAmount) || 'N/A', // Format the amount
+                "Timestamp": apprehensionData.timestamp // Include timestamp for sorting
             });
         });
+
+        // Sort data by timestamp (most recent first)
+        data.sort((a, b) => b.Timestamp - a.Timestamp);
+
+        // Remove the timestamp field before exporting
+        data.forEach(item => delete item.Timestamp);
 
         const worksheet = XLSX.utils.json_to_sheet(data);
         const workbook = XLSX.utils.book_new();
@@ -178,8 +186,13 @@ const exportXLS = async () => {
 
 async function logHistory(actionType, details, additionalInfo = {}) {
     try {
-        const auth = getAuth();
+        const auth = getAuth(); // Ensure getAuth is called correctly
         const currentUser = auth.currentUser;
+        
+        if (!currentUser) {
+            throw new Error("No authenticated user found.");
+        }
+
         console.log("Current user:", currentUser);
 
         const historyRef = collection(firestore, 'historyLogs');
@@ -188,8 +201,9 @@ async function logHistory(actionType, details, additionalInfo = {}) {
         const historyData = {
             actionType,
             details,
-            performedBy,
+            performedBy: currentUser.email, // Ensure performedBy is set
             timestamp,
+            ...additionalInfo // Include any additional info
         };
 
         console.log("Attempting to log history:", historyData);
@@ -399,7 +413,14 @@ document.getElementById('historyLogsBtn').addEventListener('click', async () => 
     }
 });
 
+document.getElementById('exportXLS').addEventListener('click', exportXLS); // Add this line to use exportXLS
 
 // Initialize the data on page load
-fetchApprehensionsData();
+onAuthStateChanged(getAuth(), (user) => {
+    if (user) {
+        fetchApprehensionsData();
+    } else {
+        console.error("No authenticated user found.");
+    }
+});
 

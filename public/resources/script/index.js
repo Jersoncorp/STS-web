@@ -4,6 +4,7 @@ import { auth } from "./config.js";
 import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail, // Add this import
 } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
 // -------------------------------------------------- Auth State Change
@@ -54,6 +55,8 @@ async function loginUser(event) {
 }
 
 async function handleForgotPassword(event) {
+  event.preventDefault(); // Prevent default form submission behavior
+
   const emailElement = document.getElementById("email");
 
   if (emailElement) {
@@ -94,8 +97,6 @@ async function handleForgotPassword(event) {
   }
 }
 
-
-
 // -------------------------------------------------- Form Validation
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -121,6 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Attach the "Forgot Password" handler to the link
   const forgotPasswordLink = document.getElementById("forgotPasswordLink");
   if (forgotPasswordLink) {
-    forgotPasswordLink.addEventListener("click", handleForgotPassword);
+    forgotPasswordLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      handleForgotPassword(event);
+    });
   }
 });

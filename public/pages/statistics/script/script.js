@@ -63,8 +63,9 @@ function generateRecommendations({ dailyData, monthlyData, yearlyData, locationD
     const maxMonthly = Math.max(...Object.values(monthlyData), 0);
     const maxYearly = Math.max(...Object.values(yearlyData), 0);
     const maxLocation = Math.max(...Object.values(locationData), 0);
+    const maxViolationCount = Math.max(...Object.values(violationCounts), 0);
 
-    const criticalData = { daily: maxDaily, monthly: maxMonthly, yearly: maxYearly, location: maxLocation };
+    const criticalData = { daily: maxDaily, monthly: maxMonthly, yearly: maxYearly, location: maxLocation, violation: maxViolationCount };
     const highestCategory = Object.keys(criticalData).reduce((a, b) =>
         criticalData[a] > criticalData[b] ? a : b
     );
@@ -84,8 +85,12 @@ function generateRecommendations({ dailyData, monthlyData, yearlyData, locationD
             const maxLocationName = Object.keys(locationData).find(key => locationData[key] === maxLocation);
             recommendation = `The location with the highest apprehensions (${maxLocation}) is ${maxLocationName}. Deploy additional resources here.`;
             break;
+        case 'violation':
+            const maxViolationName = Object.keys(violationCounts).find(key => violationCounts[key] === maxViolationCount);
+            recommendation = `The most frequent violation is ${maxViolationName} with ${maxViolationCount} occurrences. Consider targeted awareness campaigns and stricter enforcement.`;
+            break;
         default:
-            recommendation = "No significant issues detected.";
+            recommendation = "No significant issues detected. Continue with the current strategy.";
     }
 
     // Display the recommendation
