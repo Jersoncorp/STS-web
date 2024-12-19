@@ -3,7 +3,7 @@ import { firestore } from '../../../resources/script/config.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
 
 // Function to fetch apprehension data (daily, monthly, yearly, location-based, and violation frequency)
-async function fetchApprehensionData() {
+async function fetchApprehensionData() {    
     const dailyData = {};
     const monthlyData = {};
     const yearlyData = {};
