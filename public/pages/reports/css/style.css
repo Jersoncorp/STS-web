@@ -5,6 +5,10 @@
     box-sizing: border-box;
 }
 
+.title {
+    color: black;
+}
+
 .row-body {
     display: flex;
     gap: 10px; /* Gap between the two tables */
@@ -57,14 +61,6 @@
     font-weight: bold;
 }
 
-/* Set the color of h4 tags to black */
-h4 {
-    color: black;
-}
-
-.title {
-    color: black;
-}
 /* Totals Styling */
 #totalPaidAmount, #totalUnpaidAmount {
     font-size: 1.5rem;
