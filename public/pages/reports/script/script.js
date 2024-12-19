@@ -466,3 +466,5 @@ onAuthStateChanged(getAuth(), (user) => {
     console.error("No authenticated user found.");
   }
 });
+
+
